@@ -1,0 +1,17 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String!
+}
+
+type Item {
+  id: ID! @unique
+  title: String!
+  description: String!
+  image: String
+  imageLarge: String
+  price: Int!
+  createdAt: DateTime! #DateTime ii din prisma, daca folosim grapgql fara prisma, trebuie alt type
+  updatedAt: DateTime!
+  # user:
+}

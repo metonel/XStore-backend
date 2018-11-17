@@ -1,0 +1,10 @@
+endpoint: ${env:PRISMA_ENDPOINT}
+datamodel: datamodel.prisma
+#secret: ${env:PRISMA_SECRET}
+hooks:
+    post-deploy:
+        - graphql get-schema -p prisma #dupa ce genereaza baza de date pe server, face un fisier src/generated/prisma.graphql, une sunt toate operatiile ce le putem face pe db, ca un API
+
+#generate:
+#  - generator: typescript-client
+#    output: ./generated/prisma-client/
