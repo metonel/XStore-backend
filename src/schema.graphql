@@ -1,9 +1,13 @@
-# tot ce va fi vizibil din API definim aici. in fis generat de prisma ii tot ce putem face cu db, dar aici definim ce vrem disponibil in aplicatie
+# aici e Yoga-ul tot ce va fi vizibil din API definim aici. in fis generat de prisma ii tot ce putem face cu db, dar aici definim ce vrem disponibil in aplicatie
 # type Dog {
 #   name: String!
 # }
 #comentariu de mai jos leaga la ce avem in prisma.graphql, sa nu mai trebuiasca sa definit ce avem acolo. nu e doar comentariu, asa face prisma legatura intre fisiere
 # import * from "./generated/prisma.graphql"
+
+type SuccessMessage { #restu type-urilor folosite, gen User, Item, is definite in prosma.grapgql
+  message: String
+}
 
 type Mutation {
   #   createDog(name: String!): Dog #functia ia ca argument un name de tip string si cu el creaza un Dog nou
@@ -14,9 +18,38 @@ type Mutation {
     image: String
     imageLarge: String
   ): Item! #Item nu e definit aici, e importat din prisma.graphql prin comentariu
+  updateItem(id: ID!, title: String, description: String, price: Int): Item!
+  deleteItem(id: ID!): Item
+  signup(email: String!, password: String!, name: String!): User!
+  signin(email: String!, password: String!): User!
+  signout: SuccessMessage
+  requestReset(email: String!): SuccessMessage
+  resetPassword(
+    resetToken: String!
+    password: String!
+    confirmPassword: String!
+  ): User!
 }
 
 type Query {
   #   dogs: [Dog]! #inseamna ca tot timpu tre sa returneze array-ul, si daca querry-ul nu returneaza rezultate, de ex nu is caini, tre sa returneze un array gol, nu poate returna null, data faceam [Dog!]!, nu returna cainele cu nume null
-  items: [Item]!
+  items( #daca in resolver query-ul asta e customizat, nu sa sa functioneze asta pt paginare!
+    where: ItemWhereInput
+    orderBy: ItemOrderByInput
+    skip: Int
+    first: Int
+  ): [Item]! #skip si first sunt pt paginare, de ex ii zicem sa skip primele 4 produse si sa arate produsele incepand cu first 5 pana la 8
+  item(where: ItemWhereUniqueInput!): Item #query-urile sunt intoarse de Prisma cand am facut generarea bazei de date, se pot modifica, dar e mai usor sa le folosim, se poate si da ca argument id: ID!, dar asa e structura ei facuta in prisma.graphql
+  itemsConnection(where: ItemWhereInput): ItemConnection! #itemsConnection e din prisma, special pt paginare
+  me: User #returneaza userul logat, se foloseste de token, nu trebuie trimis id-ul pt ca in express in middleware il atasam la toate req
+  users: [User]!
+}
+
+#redefinim type-ul user pt a modifica accesu in frontend la anumite campuri (password, resetToken, etc)
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  permissions: [Permission!]!
 }

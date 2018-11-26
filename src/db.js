@@ -6,7 +6,7 @@ const db = new Prisma({
   typeDefs: "src/generated/prisma.graphql", //fisieru generat de prisma, unde gasim toata logica ce o putem aplica pe db (interogarea in JS)
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
-  debug: true //face un console.log la query si mutation
+  debug: false //face un console.log la query si mutation
 });
 
 module.exports = db;

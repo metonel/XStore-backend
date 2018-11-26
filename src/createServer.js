@@ -15,7 +15,7 @@ function createServer() {
     resolverValidationOptions: {
       //sa nu dea ceva erori
       requireResolversForResolveType: false
-    }, //12 min 12
+    },
     context: req => ({ ...req, db }) //aici expumen db la requesturi de la resolveri
   });
 }
